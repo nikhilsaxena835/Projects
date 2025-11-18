@@ -1,0 +1,26 @@
+{
+    "accounts": [
+      {
+        "id": "client_001",
+        "bal": 1500,
+        "password": "pass123",
+        "bank_name": "A",
+        "role": "cashier"
+      },
+      {
+        "id": "client_002",
+        "bal": 3200,
+        "password": "secure456",
+        "bank_name": "B",
+        "role": "cashier"
+      },
+      {
+        "id": "client_003",
+        "bal": 780,
+        "password": "mypassword789",
+        "bank_name": "A",
+        "role": "cust"
+      }
+    ]
+  }
+  

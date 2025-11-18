@@ -1,0 +1,80 @@
+//python -m grpc_tools.protoc -I=comms --python_out=. --grpc_python_out=. comms/*.proto
+
+syntax = "proto3";
+
+package protocol;
+
+// Payment Details from Client sent to Gateway server
+message TransactionInit{
+    string init_id = 1;
+    string recv_id = 2;
+    string recv_bank = 3;
+    double amount = 4;
+    string trx = 5;
+    bool credit = 6;
+}
+
+// Debit instruction sent from Gateway to Debit client's Bank and also
+//  Credit instruction sent from Gateway to Credit client's Bank
+
+message TrxInfo{
+    string id = 1;
+    double amount = 2;
+    string trx = 3;
+    bool credit = 4;
+}
+// Message sent by servers to gateway and also from gateway to original initiator about the status and also from
+// receiver of money to gateway indicating it got money.
+message Status{
+    string trx = 1;
+    bool success = 2;
+}
+
+//  Sent by Gateway to receiver client.
+message Credit{
+    double amount = 1;
+    string trx = 2;
+}
+
+message Register{
+    string IP = 1;
+    double port = 2;
+    string name = 3;
+    string ID = 4; // null for bank, only client sends id.
+    string password = 5; // null for bank server, only client sends password.
+    string trx = 6; 
+}
+
+message PrepareRequest {
+    string transaction_id = 1;
+    string account_id = 2;
+    double amount = 3;
+    bool is_credit = 4;
+}
+
+message PrepareResponse {
+    string transaction_id = 1;
+    bool ready = 2;
+}
+
+message CommitRequest {
+    string transaction_id = 1;
+    bool commit = 2;  // true for commit, false for abort
+}
+
+message Ping {
+    bool alive = 1;
+}
+
+service Banking {
+    rpc MakePayment (TransactionInit) returns (Status); // Sender to Gateway
+    rpc UpdateBalance (TrxInfo) returns (Status); //Gateway to Banks (both debiting and crediting)
+    rpc CreditMoney (Credit) returns (Status); // Sent by Receiver client to Gateway server.
+    rpc CheckBalance (Status) returns (Credit); //Client asks for its balance from gateway, the same message is
+                                                // sent by gateway to bank server to get balance.
+    rpc Registration (Register) returns (Status);
+
+    rpc PrepareTransaction (PrepareRequest) returns (PrepareResponse);
+    rpc CommitTransaction (CommitRequest) returns (Status);
+    rpc Pinger (Ping) returns (Ping);
+}

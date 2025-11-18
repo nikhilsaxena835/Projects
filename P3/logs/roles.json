@@ -1,0 +1,17 @@
+{
+    "client": [
+        "/PaymentGateway/RegisterClient",
+        "/PaymentGateway/MakePayment",
+        "/PaymentGateway/ViewBalance"
+    ],
+    "admin": [
+        "/PaymentGateway/AddUser",
+        "/PaymentGateway/RemoveUser",
+        "/PaymentGateway/ViewAllTransactions",
+        "/PaymentGateway/ManageBanks"
+    ],
+    "bank": [
+        "/BankService/ProcessPayment",
+        "/BankService/ViewAccount"
+    ]
+}
